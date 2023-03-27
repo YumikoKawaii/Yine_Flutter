@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:yine/screens/init_profile.dart';
 import 'package:yine/screens/login.dart';
+import 'package:yine/screens/main_nav.dart';
 import 'package:yine/screens/register.dart';
 import 'package:yine/screens/startup.dart';
 import 'package:yine/screens/welcome.dart';
@@ -20,13 +22,14 @@ class Yine extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: StartUp.id,
+      initialRoute: MainNav.id,
       routes: {
         StartUp.id: (context) => StartUp(),
         Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
         Register.id: (context) => Register(),
-
+        InitProfile.id: (context) => InitProfile(),
+        MainNav.id: (context) => MainNav(),
       },
     );
   }

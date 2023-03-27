@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:yine/controllers/account.dart';
 import 'package:yine/models/account.dart';
 import 'package:yine/network/account.dart';
-import 'package:yine/network/status_code.dart';
+import 'package:yine/network/network_helper.dart';
+import 'package:yine/screens/init_profile.dart';
 import 'package:yine/screens/login.dart';
 import 'package:yine/themes/styles.dart';
+import 'package:yine/utils/utils.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -25,49 +27,6 @@ class _Register extends State<Register> {
   String emailCaution = "";
   String passwordCaution = "";
   String cPasswordCaution = "";
-
-  Container inputField(String field, TextEditingController controller, IconData iconData, bool hidden) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 15, 0, 5),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                field,
-                style: TextStyle(
-                  color: LightTheme.primaryColor,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            height: 60,
-            decoration: BoxDecoration(
-                color: LightTheme.neutralColor,
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: TextField(
-              scrollPadding: const EdgeInsets.only(bottom:40),
-              obscureText: hidden,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(bottom: 15),
-                border: InputBorder.none,
-                icon: Icon(
-                  iconData,
-                  color: LightTheme.tertiaryColor,
-                ),
-              ),
-            ),
-          ),
-        ]
-      ),
-    );
-  }
 
   void _requestRegister(String email, String password, String cPassword) async {
 
@@ -113,6 +72,8 @@ class _Register extends State<Register> {
         cPasswordCaution = "";
       }
     }
+
+    if (context.mounted) Navigator.pushNamed(context, InitProfile.id);
 
   }
 
@@ -221,7 +182,7 @@ class _Register extends State<Register> {
                         width: double.infinity,
                         child: TextButton(
                             onPressed: () {
-                              setState(() {
+                              setState(() async {
                                 _requestRegister(emailTextEditController.text, passwordTextEditController.text, cPasswordTextEditController.text);
                               });
                             },
