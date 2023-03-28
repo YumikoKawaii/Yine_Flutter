@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yine/controllers/account.dart';
 import 'package:yine/network/account.dart';
+import 'package:yine/network/network_helper.dart';
 import 'package:yine/screens/register.dart';
 import 'package:yine/screens/welcome.dart';
 import 'package:yine/themes/styles.dart';
@@ -23,10 +24,22 @@ class _Login extends State<Login> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
-  void _requestLogin(String email, String password) {
+  void _requestLogin(String email, String password) async {
 
     if (validateEmail(email) && password != "") {
-        print(requestLogin(email, password));
+        var responce = await requestLogin(email, password);
+        switch (responce.statusCode) {
+          case StatusCode.NotFound: {
+            emailCautions = "Account is not exist!";
+            passwordCautions = "";
+          }
+          break;
+          case StatusCode.Forbidden: {
+            emailCautions = "";
+            passwordCautions = "Wrong password!";
+          }
+          break;
+        }
     }
 
     if (!validateEmail(email)) {

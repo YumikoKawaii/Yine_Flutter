@@ -30,10 +30,12 @@ Future<void> insertAccount(Account account) async {
 }
 
 Future<Account> getAccount() async {
-  var result = await database.rawQuery('select * from accounts');
-  if (result.isEmpty()) {
+  var exist = await database.rawQuery("select count(*) as count from accounts");
+  if (exist[0]['count'] as int == 0) {
     return Account(id: "", session: "");
+  } else {
+    var result = await database.query("accounts");
+    var item = result[0];
+    return Account(id: item['id'] as String, session: item['session'] as String);
   }
-  var item = result.first;
-  return Account(id: item['id'] as String, session: item['session'] as String);
 }

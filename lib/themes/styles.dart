@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LightTheme {
-  static Color primaryColor = const Color(0xFFB9FDDB);
-  static Color secondaryColor = const Color(0xFFC7FFED);
-  static Color tertiaryColor = const Color(0xFF8DCEA5);
+  static Color primaryColor = const Color(0xFF028090);
+  static Color secondaryColor = const Color(0xFFBBE4D6);
+  static Color tertiaryColor = const Color(0xFF105266);
   static Color sprimaryColor = const Color(0xFF572D35);
   static Color ssecondaryColor = const Color(0xFF5A464C);
   static Color stertiaryColor = const Color(0xFFADA08C);

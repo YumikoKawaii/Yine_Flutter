@@ -7,6 +7,7 @@ import 'package:yine/screens/startup.dart';
 import 'package:yine/screens/welcome.dart';
 
 dynamic database;
+dynamic account;
 
 void main() {
   runApp(const Yine());
@@ -22,7 +23,7 @@ class Yine extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: MainNav.id,
+      initialRoute: StartUp.id,
       routes: {
         StartUp.id: (context) => StartUp(),
         Welcome.id: (context) => Welcome(),

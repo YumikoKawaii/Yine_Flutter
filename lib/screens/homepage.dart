@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:yine/main.dart';
+import 'package:yine/models/account.dart';
+import 'package:yine/models/profile.dart';
 import 'package:yine/themes/styles.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-
-
-
   _Home createState() => _Home();
 }
 
 class _Home extends State<Home> {
+
+  dynamic profile;
+
+  @override
+  void initState() {
+    getProfileFromDatabase();
+  }
+
+  void getProfileFromDatabase() async {
+    profile = await getProfile(account.id);
+  }
 
   Expanded serviceTemplate(String field, IconData iconData) {
     return Expanded(
@@ -50,13 +61,18 @@ class _Home extends State<Home> {
     );
   }
 
+  void test() async {
+    var account = await getAccount();
+    print(account);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: LightTheme.primaryColor,
+        backgroundColor: LightTheme.secondaryColor,
         actions: <Widget>[
-          IconButton(onPressed: () {}, icon: Icon(Icons.bookmark, color: LightTheme.stertiaryColor,)),
+          IconButton(onPressed: test, icon: Icon(Icons.bookmark, color: LightTheme.stertiaryColor,)),
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications, color: LightTheme.stertiaryColor,)),
           IconButton(onPressed: () {}, icon: Icon(Icons.person_add_alt_1, color: LightTheme.stertiaryColor,)),
           IconButton(onPressed: () {}, icon: Icon(Icons.settings, color: LightTheme.stertiaryColor,)),
@@ -72,14 +88,14 @@ class _Home extends State<Home> {
                   Container(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage("https://scontent.fhan14-4.fna.fbcdn.net/v/t39.30808-6/336397217_170823475775975_2908837610903461249_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=cfNVzGGMvv8AX9r-3S9&_nc_ht=scontent.fhan14-4.fna&oh=00_AfCArJHwLlnilDdGKl93zlL-3bS7_1Uy3WSQXPJXdLURnA&oe=642522D3"),
+                      backgroundImage: AssetImage("images/user.png"),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "Yumiko Sturluson",
+                        profile.username,
                         style: TextStyle(
                           color: LightTheme.sprimaryColor,
                           fontSize: 20,
@@ -198,4 +214,5 @@ class _Home extends State<Home> {
       ),
     );
   }
+
 }

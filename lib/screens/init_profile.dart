@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yine/models/profile.dart';
 import 'package:yine/network/network_helper.dart';
+import 'package:yine/screens/main_nav.dart';
 import 'package:yine/themes/styles.dart';
 import 'package:yine/utils/utils.dart';
 
+import '../main.dart';
 import '../network/profile.dart';
 
 class InitProfile extends StatefulWidget {
@@ -23,9 +26,9 @@ class _InitProfile extends State<InitProfile> {
   void _requestChangeProfile(String value) async {
 
     if (value != "") {
-      var respone = await requestChangeProfile("username", value);
-
-      switch(respone.statusCode) {
+      var response = await requestChangeProfile(account.id, account.session, "username", value);
+      print(response.statusCode);
+      switch(response.statusCode) {
         case StatusCode.BadRequest: {
           usernameCaution = "Unexpected error!";
         }
@@ -38,6 +41,10 @@ class _InitProfile extends State<InitProfile> {
           usernameCaution = "You have changed your username within 60 days!";
         }
         break;
+        case StatusCode.OK: {
+          await insertProfile(Profile(id: account.id, avatar: "", username: value, birthday: "", address: "", gender: "", hobbies: ""));
+          if (context.mounted) Navigator.pushNamed(context, MainNav.id);
+        }
       }
 
     } else {
@@ -74,7 +81,7 @@ class _InitProfile extends State<InitProfile> {
                                   backgroundColor: LightTheme.neutralColor,
                                   child: CircleAvatar(
                                     radius: 75,
-                                    backgroundImage: NetworkImage("https://i.ytimg.com/vi/6RWfxcXCDrc/maxresdefault.jpg"),
+                                    backgroundImage: AssetImage("images/user.png"),
                                   ),
                                 ),
                                 Container(

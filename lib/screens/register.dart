@@ -10,6 +10,8 @@ import 'package:yine/screens/login.dart';
 import 'package:yine/themes/styles.dart';
 import 'package:yine/utils/utils.dart';
 
+import '../main.dart';
+
 class Register extends StatefulWidget {
   const Register({super.key});
   static String id = "register";
@@ -50,8 +52,9 @@ class _Register extends State<Register> {
         }
         break;
         case StatusCode.OK: {
-            var account = Account.fromJson(jsonDecode(response.body));
-            print(account);
+            account = Account.fromJson(jsonDecode(response.body));
+            await insertAccount(account);
+            if (context.mounted) Navigator.pushNamed(context, InitProfile.id);
         }
       }
     } else {
@@ -72,8 +75,6 @@ class _Register extends State<Register> {
         cPasswordCaution = "";
       }
     }
-
-    if (context.mounted) Navigator.pushNamed(context, InitProfile.id);
 
   }
 
@@ -182,7 +183,7 @@ class _Register extends State<Register> {
                         width: double.infinity,
                         child: TextButton(
                             onPressed: () {
-                              setState(() async {
+                              setState(() {
                                 _requestRegister(emailTextEditController.text, passwordTextEditController.text, cPasswordTextEditController.text);
                               });
                             },
