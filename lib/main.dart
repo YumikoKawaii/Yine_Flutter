@@ -21,7 +21,6 @@ class Yine extends StatelessWidget {
     return MaterialApp(
       title: 'Yine',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
       ),
       initialRoute: StartUp.id,
       routes: {

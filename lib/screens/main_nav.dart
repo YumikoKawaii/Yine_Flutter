@@ -18,11 +18,12 @@ class _MainNav extends State<MainNav> {
 
   int selected = 0;
   List<Widget> screens = [
-    Home(),
-    Chats(),
-    Voom(),
-    Calls()
+    const Home(),
+    const Chats(),
+    const Voom(),
+    const Calls()
   ];
+
 
   @override
   Widget build(BuildContext context) {

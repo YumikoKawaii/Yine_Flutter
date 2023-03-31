@@ -52,21 +52,34 @@ Future<void> insertProfile(Profile profile) async {
 }
 
 Future<Profile> getProfile(String id) async {
-  var result = await database.rawQuery("select * from profiles where id = ?", id);
+  var result = await database.rawQuery("select * from profiles where id = \"$id\"");
 
-  if (result == null) {
+  if (result == []) {
     return Profile(
         id: "", avatar: "", username: "", birthday: "", address: "", gender: "", hobbies: ""
     );
   }
 
+  var item = result[0];
+
   return Profile(
-    id: result['id'] as String,
-    avatar: result['avatar'] as String,
-    username: result['username'] as String,
-    birthday: result['birthday'] as String,
-    address: result['address'] as String,
-    gender: result['gender'] as String,
-    hobbies: result['hobbies'] as String,
+    id: item['id'] as String,
+    avatar: item['avatar'] as String,
+    username: item['username'] as String,
+    birthday: item['birthday'] as String,
+    address: item['address'] as String,
+    gender: item['gender'] as String,
+    hobbies: item['hobbies'] as String,
   );
+}
+
+Future<List<Profile>> getFriendProfiles(String id) async {
+
+  var raw = await database.rawQuery("select * from profiles where id <> \"$id\"");
+  if (raw == []) return [];
+  List<Profile> result = [];
+  for (int i = 0;i < raw.length;i++) {
+    result.add(Profile.fromJson(raw[i]));
+  }
+  return result;
 }
