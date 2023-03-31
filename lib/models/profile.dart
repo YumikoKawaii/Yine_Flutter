@@ -48,6 +48,7 @@ class Profile {
 }
 
 Future<void> insertProfile(Profile profile) async {
+  await database.rawQuery("delete from profiles where id = \"${profile.id}\"");
   await database.insert('profiles', profile.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
 }
 

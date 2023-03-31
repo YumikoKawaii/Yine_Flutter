@@ -18,7 +18,7 @@ import 'package:yine/themes/styles.dart';
 Map<int, String> migrationScripts = {
   1: "CREATE TABLE accounts (id TEXT PRIMARY KEY, session TEXT)",
   2: "CREATE TABLE profiles (id TEXT PRIMARY KEY, avatar TEXT, username TEXT, birthday TEXT, address TEXT, gender TEXT, hobbies TEXT)",
-  3: "CREATE TABLE relationships (id TEXT PRIMARY KEY, guest TEXT, status TEXT)",
+  3: "CREATE TABLE relationships (id TEXT, guest TEXT, status TEXT)",
 };
 
 class StartUp extends StatefulWidget {
@@ -85,7 +85,6 @@ class _StartUp extends State<StartUp> {
 
     for (int i = 0;i < fid.length;i++) {
       var res = await fetchProfileData(account, fid[i]);
-      print(fid[i]);
       if (res.statusCode == StatusCode.OK) {
           await insertProfile(Profile.fromJson(jsonDecode(res.body)));
       }
