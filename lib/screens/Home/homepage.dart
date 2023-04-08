@@ -3,6 +3,7 @@ import 'package:yine/main.dart';
 import 'package:yine/models/account.dart';
 import 'package:yine/models/profile.dart';
 import 'package:yine/models/relationship.dart';
+import 'package:yine/network/profile.dart';
 import 'package:yine/screens/Home/Components/friendlist.dart';
 import 'package:yine/screens/Home/Components/service.dart';
 import 'package:yine/themes/styles.dart';
@@ -14,6 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
+
   dynamic profile;
   dynamic friendList;
 
@@ -27,8 +29,8 @@ class _Home extends State<Home> {
   }
 
   void getDataFromDatabase() async {
-    profile = await getProfile(account.id);
-    friendList = await getFriendProfiles(account.id);
+    profile = await fetchProfileData(account.id, account.id);
+    //friendList = await getFriendProfiles(account.id);
     setState(() {});
   }
 

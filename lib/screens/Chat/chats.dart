@@ -4,12 +4,23 @@ import 'package:yine/themes/styles.dart';
 class Chats extends StatefulWidget {
   const Chats({super.key});
 
-
-
   _Chats createState() => _Chats();
 }
 
 class _Chats extends State<Chats> {
+
+  dynamic conversations;
+
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+  void getConversationsDataFromDatabase() async {
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +30,7 @@ class _Chats extends State<Chats> {
         title: Text(
           "Chats",
           style: TextStyle(
-            color: LightTheme.stertiaryColor,
+            color: LightTheme.sprimaryColor,
           ),
         ),
         actions: <Widget>[
@@ -45,6 +56,20 @@ class _Chats extends State<Chats> {
                       Text("Search"),
                     ],
                   ),
+                ),
+              ),
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage("images/user.png"),
+                      ),
+                      
+                    ],
+                  )
                 ),
               ),
             ],

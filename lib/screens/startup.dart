@@ -17,8 +17,6 @@ import 'package:yine/themes/styles.dart';
 
 Map<int, String> migrationScripts = {
   1: "CREATE TABLE accounts (id TEXT PRIMARY KEY, session TEXT)",
-  2: "CREATE TABLE profiles (id TEXT PRIMARY KEY, avatar TEXT, username TEXT, birthday TEXT, address TEXT, gender TEXT, hobbies TEXT)",
-  3: "CREATE TABLE relationships (id TEXT, guest TEXT, status TEXT)",
 };
 
 class StartUp extends StatefulWidget {
@@ -62,32 +60,6 @@ class _StartUp extends State<StartUp> {
       Navigator.pushNamed(this.context, Welcome.id);
     } else {
       Navigator.pushNamed(this.context, MainNav.id);
-    }
-
-    var rltsData = await fetchRelationships(account);
-    if (rltsData.statusCode == StatusCode.OK) {
-      var list = json.decode(rltsData.body);
-      for (int i = 0;i < list.length;i++) {
-        await insertRelationship(Relationship(
-          id: list[i]['user'] as String,
-          guest: list[i]['guest'] as String,
-          status: list[i]['status'] as String,
-        ));
-      }
-    }
-
-    List<String> fid = await getFriends();
-    await fetchFriendData(fid);
-
-  }
-
-  Future<void> fetchFriendData(List<String> fid) async {
-
-    for (int i = 0;i < fid.length;i++) {
-      var res = await fetchProfileData(account, fid[i]);
-      if (res.statusCode == StatusCode.OK) {
-          await insertProfile(Profile.fromJson(jsonDecode(res.body)));
-      }
     }
 
   }

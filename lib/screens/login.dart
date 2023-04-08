@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:yine/controllers/account.dart';
+import 'package:yine/main.dart';
+import 'package:yine/models/account.dart';
 import 'package:yine/network/account.dart';
 import 'package:yine/network/network_helper.dart';
+import 'package:yine/screens/main_nav.dart';
 import 'package:yine/screens/register.dart';
 import 'package:yine/screens/welcome.dart';
 import 'package:yine/themes/styles.dart';
@@ -28,8 +33,10 @@ class _Login extends State<Login> {
 
     if (validateEmail(email) && password != "") {
         var responce = await requestLogin(email, password);
+        print(responce.statusCode);
         switch (responce.statusCode) {
           case StatusCode.NotFound: {
+            print("123");
             emailCautions = "Account is not exist!";
             passwordCautions = "";
           }
@@ -39,20 +46,31 @@ class _Login extends State<Login> {
             passwordCautions = "Wrong password!";
           }
           break;
+          case StatusCode.OK: {
+            account = Account.fromJson(jsonDecode(responce.body));
+            insertAccount(account);
+            print(account);
+            if (context.mounted) Navigator.pushNamed(context, MainNav.id);
+          }
+          break;
         }
+    } else {
+      if (!validateEmail(email)) {
+        emailCautions = "Invalid email!";
+      } else {
+        emailCautions = "";
+      }
+
+      if (password == "") {
+        passwordCautions = "Invalid password!";
+      } else {
+        passwordCautions = "";
+      }
     }
 
-    if (!validateEmail(email)) {
-      emailCautions = "Invalid email!";
-    } else {
-      emailCautions = "";
-    }
+    setState(() {
 
-    if (password == "") {
-      passwordCautions = "Invalid password!";
-    } else {
-      passwordCautions = "";
-    }
+    });
 
   }
 
@@ -246,9 +264,7 @@ class _Login extends State<Login> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      setState(() {
                         _requestLogin(emailTextController.text, passwordTextController.text);
-                      });
                     },
                     child: Text(""
                         "Log in",

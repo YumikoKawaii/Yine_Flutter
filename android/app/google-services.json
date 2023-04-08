@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "544342724372",
+    "project_id": "yine-6c4e3",
+    "storage_bucket": "yine-6c4e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544342724372:android:6d6f1b4ae4f21e877d3c01",
+        "android_client_info": {
+          "package_name": "com.yumikostl.yine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544342724372-77c7vr0hjmfvf23o7v28f5r8euuufi0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClubO-fX55NbBqUBXJ9gBNf3Al3Gz2a_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544342724372-77c7vr0hjmfvf23o7v28f5r8euuufi0s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:yine/screens/calls.dart';
-import 'package:yine/screens/chats.dart';
+import 'package:yine/screens/Chat/chats.dart';
 import 'package:yine/screens/Home/homepage.dart';
 import 'package:yine/screens/voom.dart';
 import 'package:yine/themes/styles.dart';
@@ -11,6 +11,7 @@ class MainNav extends StatefulWidget {
 
   static String id = "mainNav";
 
+  @override
   _MainNav createState() => _MainNav();
 }
 
@@ -62,7 +63,6 @@ class _MainNav extends State<MainNav> {
               selected = i;
             });
           },
-
         ),
       ),
     );

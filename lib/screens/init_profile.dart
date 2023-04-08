@@ -27,7 +27,6 @@ class _InitProfile extends State<InitProfile> {
 
     if (value != "") {
       var response = await requestChangeProfile(account.id, account.session, "username", value);
-      print(response.statusCode);
       switch(response.statusCode) {
         case StatusCode.BadRequest: {
           usernameCaution = "Unexpected error!";
@@ -42,7 +41,6 @@ class _InitProfile extends State<InitProfile> {
         }
         break;
         case StatusCode.OK: {
-          await insertProfile(Profile(id: account.id, avatar: "", username: value, birthday: "", address: "", gender: "", hobbies: ""));
           if (context.mounted) Navigator.pushNamed(context, MainNav.id);
         }
       }
