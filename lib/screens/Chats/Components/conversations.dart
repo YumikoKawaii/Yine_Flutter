@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yine/screens/Chat/chat.dart';
+import 'package:yine/screens/Chat/Group/group.dart';
+import 'package:yine/screens/Chat/Personal/personal.dart';
 import 'package:yine/themes/styles.dart';
 
 import '../../../models/conversation.dart';
@@ -20,7 +21,19 @@ class ConversationList extends StatelessWidget {
             padding: const EdgeInsets.all(5),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Chat(conv_id: convs[index].conv_id)));
+                if (convs[index].type == "personal") {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              PersonalChat(conv_id: convs[index].conv_id)));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              GroupChat(conv_id: convs[index].conv_id)));
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
@@ -31,8 +44,10 @@ class ConversationList extends StatelessWidget {
                   CircleAvatar(
                     backgroundImage: convs[index].conv_avatar == ""
                         ? const AssetImage("images/user.png")
-                        : NetworkImage(convs[index].conv_avatar)
-                            as ImageProvider,
+                        : (convs[index].conv_avatar == "default"
+                            ? const AssetImage("images/group.png")
+                            : NetworkImage(convs[index].conv_avatar)
+                                as ImageProvider),
                     radius: 35,
                   ),
                   Expanded(
@@ -68,12 +83,14 @@ class ConversationList extends StatelessWidget {
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 30),
-                    child: Text("${convs[index].recent.hour}:${convs[index].recent.minute}",
+                    child: Text(
+                      "${convs[index].recent.hour}:${convs[index].recent.minute}",
                       style: TextStyle(
                         color: LightTheme.stertiaryColor,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
-                      ),),
+                      ),
+                    ),
                   ),
                 ],
               ),

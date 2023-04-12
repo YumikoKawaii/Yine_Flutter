@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:yine/models/account.dart';
 import 'package:yine/models/conversation.dart';
+import 'package:yine/models/group.dart';
 import 'package:yine/models/role.dart';
 import 'package:yine/network/network_helper.dart';
 
@@ -19,51 +20,73 @@ Future<dynamic> fetchConversations(Account account) async {
   }
 }
 
-Future<dynamic> fetchBasicInfoConversation(Account account, String target) async {
+Future<dynamic> fetchBasicInfoConversation(
+    Account account, String target) async {
   http.Response response = await http.get(Uri.parse('$baseURL/cvs/$target'),
       headers: {'id': account.id, 'session': account.session});
 
   if (response.statusCode == StatusCode.OK) {
     var data = jsonDecode(response.body);
     if (data["type"] == "group") {
-      return null;
+      return Conversation(
+          type: "group",
+          conv_id: target,
+          conv_name: data["name"],
+          conv_avatar: data["avatar"],
+          lastest_message: data["lastest"],
+          recent: DateTime.parse(data["recent"]),
+          newMessage: 2);
     } else {
       return Conversation(
-        conv_id: target,
-        conv_name: data["name"],
-        conv_avatar: data["avatar"],
-        lastest_message: data["lastest"],
-        recent: DateTime.parse(data["recent"]),
-        newMessage: 2
-      );
+          type: "personal",
+          conv_id: target,
+          conv_name: data["name"],
+          conv_avatar: data["avatar"],
+          lastest_message: data["lastest"],
+          recent: DateTime.parse(data["recent"]),
+          newMessage: 2);
     }
   } else {
     return null;
   }
 }
 
-Future<dynamic> fetchDetailConversation(Account account, String target) async {
-
-  http.Response response = await http.get(Uri.parse('$baseURL/cvs/d/$target'),
+Future<dynamic> fetchPersonalConversation(
+    Account account, String target) async {
+  http.Response response = await http.get(Uri.parse('$baseURL/cvs/p/d/$target'),
       headers: {'id': account.id, 'session': account.session});
 
   if (response.statusCode == StatusCode.OK) {
-
     var data = jsonDecode(response.body);
-    if (data["type"] == "group") {
-      return null;
-    } else {
-      var partner = Role.fromJSon(data["partner"]);
-      var user = Role.fromJSon(data["user"]);
-      return {
-        'type': "personal",
-        'user': user,
-        'partner': partner,
-      };
-    }
-
+    var user = Role.fromJSon(data["user"]);
+    var partner = Role.fromJSon(data["partner"]);
+    return {
+      'user': user,
+      'partner': partner,
+    };
   } else {
     return null;
   }
+}
 
+Future<dynamic> fetchGroupConversation(Account account, String target) async {
+  http.Response response = await http.get(Uri.parse('$baseURL/cvs/g/d/$target'),
+      headers: {'id': account.id, 'session': account.session});
+
+  if (response.statusCode == StatusCode.OK) {
+    var data = jsonDecode(response.body);
+
+    var group = Group.fromJson(data["gdata"]);
+    List<Role> members = <Role>[];
+    for (dynamic element in data["members"]) {
+      members.add(Role.fromJSon(element));
+    }
+
+    return {
+      'group': group,
+      'members': members,
+    };
+  } else {
+    return null;
+  }
 }

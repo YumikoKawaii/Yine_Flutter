@@ -1,5 +1,6 @@
 class Conversation {
 
+  String type;
   String conv_id;
   String conv_name;
   String conv_avatar;
@@ -8,6 +9,7 @@ class Conversation {
   int newMessage;
 
   Conversation({
+    required this.type,
     required this.conv_id,
     required this.conv_name,
     required this.conv_avatar,

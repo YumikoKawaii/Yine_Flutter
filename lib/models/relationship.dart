@@ -26,23 +26,3 @@ class Relationship {
   }
 
 }
-
-Future<void> insertRelationship(Relationship relationship) async {
-  await database.insert('relationships', relationship.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-}
-
-Future<List<String>> getFriends() async {
-  var raw = await database.rawQuery("select guest from relationships where status = \"friend\"");
-
-  if (raw == []) {
-    return [];
-  }
-
-  List<String> result = [];
-  for (int i = 0;i < raw.length;i++) {
-    result.add(raw[i]['guest']);
-  }
-
-  return result;
-
-}

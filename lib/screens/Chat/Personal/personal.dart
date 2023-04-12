@@ -2,39 +2,36 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 import 'package:yine/main.dart';
-import 'package:yine/models/message.dart';
 import 'package:yine/network/conversation.dart';
 import 'package:yine/network/message.dart';
 import 'package:yine/network/profile.dart';
-import 'package:yine/screens/Chat/Components/Personal/messages.dart';
-import 'package:yine/themes/styles.dart';
+import 'package:yine/screens/Chat/Personal/Components/messages.dart';
 
-class Chat extends StatefulWidget {
-  static String id = "chat";
+import '../../../models/message.dart';
+import '../../../themes/styles.dart';
+
+class PersonalChat extends StatefulWidget {
+  static String id = "personal_chat";
   final String conv_id;
 
-  const Chat({super.key, required this.conv_id});
+  const PersonalChat({super.key, required this.conv_id});
 
   @override
-  _Chat createState() => _Chat();
+  _PersonalChat createState() => _PersonalChat();
 }
 
-class _Chat extends State<Chat> {
-  dynamic conv_data;
-
-  late String conv_name;
-  late String conv_avatar;
+class _PersonalChat extends State<PersonalChat> {
   dynamic user;
   dynamic userRole;
-  dynamic partners;
-  dynamic partnerRoles;
+  dynamic partner;
+  dynamic partnerRole;
+
   dynamic conv_mess;
+  String conv_name = "";
 
   ScrollController messScrollController = ScrollController();
-
-  var messageController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
 
   @override
   void initState() {
@@ -43,33 +40,34 @@ class _Chat extends State<Chat> {
   }
 
   void fetchDataFromInternet() async {
-    conv_data = await fetchDetailConversation(account, widget.conv_id);
+    dynamic conv_data =
+        await fetchPersonalConversation(account, widget.conv_id);
+    userRole = conv_data["user"];
+    partnerRole = conv_data["partner"];
+    partner = await fetchGlance(account, widget.conv_id);
 
-    if (conv_data["type"] == "personal") {
-      userRole = conv_data["user"];
-      partnerRoles = conv_data["partner"];
-      user = await fetchProfileData(account, userRole.user);
-      partners = await fetchProfileData(account, partnerRoles.user);
+    print(widget.conv_id);
 
-      partnerRoles.nickname == ""
-          ? conv_name = partners.username
-          : conv_name = partners.nickname;
-
-      if (conv_name.length > 8) {
-        conv_name = "${conv_name.substring(0, 7)}...";
-      }
-
-      conv_avatar = partners.avatar;
+    if (partnerRole.nickname == "") {
+      conv_name = partner.username;
+      if (conv_name.length > 8) conv_name = "${conv_name.substring(0, 7)}...";
     }
 
     setState(() {});
 
     conv_mess = await fetchMessages(account, widget.conv_id);
 
-    scrollToEnd();
-
     setState(() {});
+
+    scrollToEnd();
     messageStream();
+  }
+
+  void scrollToEnd() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      messScrollController
+          .jumpTo(messScrollController.position.maxScrollExtent);
+    });
   }
 
   void messageStream() async {
@@ -77,16 +75,12 @@ class _Chat extends State<Chat> {
         headers: {'id': account.id, 'session': account.session});
 
     connection.listen((event) {
-      conv_mess.add(Message.fromJson(jsonDecode(event)));
-      setState(() {});
-      scrollToEnd();
-    });
-  }
-
-  void scrollToEnd() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      messScrollController
-          .jumpTo(messScrollController.position.maxScrollExtent);
+      Message message = Message.fromJson(jsonDecode(event));
+      if (message.receiver == widget.conv_id) {
+        conv_mess.add(Message.fromJson(jsonDecode(event)));
+        setState(() {});
+        scrollToEnd();
+      }
     });
   }
 
@@ -104,15 +98,15 @@ class _Chat extends State<Chat> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Container(
-          child: partners == null
+          child: partner == null
               ? const CircularProgressIndicator()
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: conv_avatar == ""
+                      backgroundImage: partner.avatar == ""
                           ? const AssetImage("images/user.png")
-                          : NetworkImage(conv_avatar) as ImageProvider,
+                          : NetworkImage(partner.avatar) as ImageProvider,
                       radius: 25,
                     ),
                     Container(
@@ -161,12 +155,9 @@ class _Chat extends State<Chat> {
                   alignment: Alignment.topCenter,
                   child: conv_mess == null
                       ? Container()
-                      : (conv_data["type"] == "personal"
-                          ? PersonalMessages(
-                              messages: conv_mess,
-                              messScrollController: messScrollController,
-                            )
-                          : Container()),
+                      : PersonalMessages(
+                          messages: conv_mess,
+                          messScrollController: messScrollController),
                 ),
               ),
               Container(
