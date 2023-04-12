@@ -4,6 +4,7 @@ import 'package:yine/models/account.dart';
 import 'package:yine/models/profile.dart';
 import 'package:yine/models/relationship.dart';
 import 'package:yine/network/profile.dart';
+import 'package:yine/network/relationship.dart';
 import 'package:yine/screens/Home/Components/friendlist.dart';
 import 'package:yine/screens/Home/Components/service.dart';
 import 'package:yine/themes/styles.dart';
@@ -15,7 +16,6 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-
   dynamic profile;
   dynamic friendList;
 
@@ -24,13 +24,18 @@ class _Home extends State<Home> {
 
   @override
   void initState() {
-    getDataFromDatabase();
+    getDataFromInternet();
     super.initState();
   }
 
-  void getDataFromDatabase() async {
-    profile = await fetchProfileData(account.id, account.id);
-    //friendList = await getFriendProfiles(account.id);
+  void getDataFromInternet() async {
+    profile = await fetchProfileData(account, account.id);
+    var friendIds = await fetchFriends(account);
+    friendList = <Profile>[];
+    for (String id in friendIds) {
+      var p = await fetchProfileData(account, id);
+      friendList.add(p);
+    }
     setState(() {});
   }
 
@@ -80,7 +85,9 @@ class _Home extends State<Home> {
                     Container(
                       child: CircleAvatar(
                         radius: 50,
-                        backgroundImage: AssetImage("images/user.png"),
+                        backgroundImage: profile == null
+                            ? const AssetImage("images/user.png")
+                            : NetworkImage(profile.avatar) as ImageProvider,
                       ),
                     ),
                     Expanded(
@@ -169,7 +176,11 @@ class _Home extends State<Home> {
                       ),
                     ),
                     children: <Widget>[
-                      friendList==null?const CircularProgressIndicator():FriendList(friendList: friendList),
+                      Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: friendList == null
+                              ? const CircularProgressIndicator()
+                              : FriendList(friendList: friendList)),
                       Container(
                         margin: const EdgeInsets.only(top: 20),
                         alignment: Alignment.center,
@@ -186,8 +197,7 @@ class _Home extends State<Home> {
                               child: TextButton(
                                 onPressed: () {},
                                 style: TextButton.styleFrom(
-                                    foregroundColor:
-                                    LightTheme.secondaryColor,
+                                    foregroundColor: LightTheme.secondaryColor,
                                     side: BorderSide(
                                       color: LightTheme.ssecondaryColor,
                                       width: 1,

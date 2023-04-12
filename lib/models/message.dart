@@ -4,48 +4,37 @@ import 'package:yine/main.dart';
 class Message {
 
   String sender;
-  String coid;
+  String receiver;
   String type;
   String content;
-  String status;
+  DateTime time;
 
   Message({
     required this.sender,
-    required this.coid,
+    required this.receiver,
     required this.type,
     required this.content,
-    required this.status,
+    required this.time,
   });
 
   Map<String, dynamic> toMap(){
     return {
       'sender': sender,
-      'coid': coid,
+      'coid': receiver,
       'type': type,
       'content': content,
-      'status': status,
+      'time': time,
     };
   }
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
         sender: json['sender'] as String,
-        coid: json['coid'] as String,
+        receiver: json['receiver'] as String,
         type: json['type'] as String,
         content: json['content'] as String,
-        status: json['status'] as String
+        time: DateTime.parse(json["Time"]),
     );
   }
 
-}
-
-Future<void> insertMessage(Message message) async {
-  await database.insert('messages', message.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-}
-
-Future<List<Message>> getMessages(String coid) async {
-
-  var result = database.rawQuery("select * from messages where coid = \"$coid\"");
-  print(result);
-  return [];
 }

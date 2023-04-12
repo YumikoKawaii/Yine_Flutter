@@ -1,53 +1,26 @@
-import 'package:yine/main.dart';
-import 'package:sqflite/sqflite.dart';
-
 class Conversation {
-  String user;
-  String coid;
-  String role;
-  String nickname;
-  String status;
+
+  String conv_id;
+  String conv_name;
+  String conv_avatar;
+  String lastest_message;
+  DateTime recent;
+  int newMessage;
 
   Conversation({
-    required this.user,
-    required this.coid,
-    required this.role,
-    required this.nickname,
-    required this.status,
+    required this.conv_id,
+    required this.conv_name,
+    required this.conv_avatar,
+    required this.lastest_message,
+    required this.recent,
+    required this.newMessage,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'user': user,
-      'coid': coid,
-      'role': role,
-      'nickname': nickname,
-      'status': status
+      'conv_name': conv_name,
+      'conv_avatar': conv_avatar,
+      'lastest_message': lastest_message,
     };
   }
-
-  factory Conversation.fromJSon(Map<String, dynamic> json) {
-    return Conversation(
-      user: json['user'] as String,
-      coid: json['coid'] as String,
-      role: json['role'] as String,
-      nickname: json['nickname'] as String,
-      status: json['status'] as String,
-    );
-  }
-}
-
-
-Future<void> insertConversation(Conversation conversation) async {
-
-  await database.insert('conversations', conversation.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-
-}
-
-Future<Conversation> getConversation(String user, String coid) async {
-
-  var result = await database.rawQuery("select * from conversations where user = \"$user\" and coid = \"$coid\"");
-
-  return Conversation.fromJSon(result);
-
 }

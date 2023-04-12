@@ -14,6 +14,7 @@ import '../main.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
+
   static String id = "register";
 
   @override
@@ -21,7 +22,6 @@ class Register extends StatefulWidget {
 }
 
 class _Register extends State<Register> {
-
   final emailTextEditController = TextEditingController();
   final passwordTextEditController = TextEditingController();
   final cPasswordTextEditController = TextEditingController();
@@ -31,31 +31,36 @@ class _Register extends State<Register> {
   String cPasswordCaution = "";
 
   void _requestRegister(String email, String password, String cPassword) async {
-
-    if (validateEmail(email) && validatePassword(password) && password == cPassword) {
+    if (validateEmail(email) &&
+        validatePassword(password) &&
+        password == cPassword) {
       var response = await requestRegister(email, password);
       switch (response.statusCode) {
-        case StatusCode.Conflict: {
-          emailCaution = "Email already exist!";
-          passwordCaution = "";
-          cPasswordCaution = "";
-        }
-        break;
-        case StatusCode.NotAccepable: {
-          print(response.body);
-        }
-        break;
-        case StatusCode.BadRequest: {
-          emailCaution = "Unexpected Error?!??";
-          passwordCaution = "Unexpected Error?!??";
-          cPasswordCaution = "Unexpected Error?!??";
-        }
-        break;
-        case StatusCode.OK: {
+        case StatusCode.Conflict:
+          {
+            emailCaution = "Email already exist!";
+            passwordCaution = "";
+            cPasswordCaution = "";
+          }
+          break;
+        case StatusCode.NotAccepable:
+          {
+            print(response.body);
+          }
+          break;
+        case StatusCode.BadRequest:
+          {
+            emailCaution = "Unexpected Error?!??";
+            passwordCaution = "Unexpected Error?!??";
+            cPasswordCaution = "Unexpected Error?!??";
+          }
+          break;
+        case StatusCode.OK:
+          {
             account = Account.fromJson(jsonDecode(response.body));
             await insertAccount(account);
             if (context.mounted) Navigator.pushNamed(context, InitProfile.id);
-        }
+          }
       }
     } else {
       if (!validateEmail(email)) {
@@ -75,7 +80,6 @@ class _Register extends State<Register> {
         cPasswordCaution = "";
       }
     }
-
   }
 
   @override
@@ -102,8 +106,7 @@ class _Register extends State<Register> {
                               width: 120,
                               decoration: BoxDecoration(
                                   color: LightTheme.primaryColor,
-                                  borderRadius: BorderRadius.circular(20)
-                              ),
+                                  borderRadius: BorderRadius.circular(20)),
                             ),
                           ),
                           Container(
@@ -117,7 +120,7 @@ class _Register extends State<Register> {
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.fromLTRB(25,0 , 0, 5),
+                            margin: const EdgeInsets.fromLTRB(25, 0, 0, 5),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Text(
@@ -132,21 +135,23 @@ class _Register extends State<Register> {
                           )
                         ],
                       ),
-                      inputField("Email", emailTextEditController, Icons.email, false),
+                      inputField(
+                          "Email", emailTextEditController, Icons.email, false),
                       Container(
                         margin: const EdgeInsets.fromLTRB(10, 5, 0, 0),
                         child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                                emailCaution,
-                                style: TextStyle(
-                                  color: LightTheme.errorColor,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            emailCaution,
+                            style: TextStyle(
+                              color: LightTheme.errorColor,
+                              fontStyle: FontStyle.italic,
                             ),
+                          ),
                         ),
                       ),
-                      inputField("Password", passwordTextEditController, Icons.key, true),
+                      inputField("Password", passwordTextEditController,
+                          Icons.key, true),
                       Container(
                         margin: const EdgeInsets.fromLTRB(10, 5, 0, 0),
                         child: Align(
@@ -160,7 +165,8 @@ class _Register extends State<Register> {
                           ),
                         ),
                       ),
-                      inputField("Confirm Password", cPasswordTextEditController, Icons.key, true),
+                      inputField("Confirm Password",
+                          cPasswordTextEditController, Icons.key, true),
                       Container(
                         margin: const EdgeInsets.fromLTRB(10, 5, 0, 0),
                         child: Align(
@@ -177,23 +183,24 @@ class _Register extends State<Register> {
                       Container(
                         margin: const EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
-                          color: LightTheme.primaryColor,
-                          borderRadius: BorderRadius.circular(20)
-                        ),
+                            color: LightTheme.primaryColor,
+                            borderRadius: BorderRadius.circular(20)),
                         width: double.infinity,
                         child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _requestRegister(emailTextEditController.text, passwordTextEditController.text, cPasswordTextEditController.text);
-                              });
-                            },
-                            child: Text(
-                              "Register",
-                              style: TextStyle(
-                                color: LightTheme.neutralColor,
-
-                              ),
+                          onPressed: () {
+                            setState(() {
+                              _requestRegister(
+                                  emailTextEditController.text,
+                                  passwordTextEditController.text,
+                                  cPasswordTextEditController.text);
+                            });
+                          },
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                              color: LightTheme.neutralColor,
                             ),
+                          ),
                         ),
                       ),
                       Container(
@@ -204,19 +211,21 @@ class _Register extends State<Register> {
                             const Text("Already have an account?"),
                             TextButton(
                                 onPressed: () {
-                                    Navigator.pushNamed(context, Login.id);
+                                  Navigator.pushNamed(context, Login.id);
                                 },
                                 child: Text(
-                                    "Log in",
+                                  "Log in",
                                   style: TextStyle(
                                     color: LightTheme.primaryColor,
                                   ),
-                                )
-                            )
+                                ))
                           ],
                         ),
                       ),
-                      Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom)),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              bottom:
+                                  MediaQuery.of(context).viewInsets.bottom)),
                     ],
                   ),
                 ),
@@ -228,4 +237,3 @@ class _Register extends State<Register> {
     );
   }
 }
-

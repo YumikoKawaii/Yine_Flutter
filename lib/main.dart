@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yine/models/account.dart';
 import 'package:yine/screens/init_profile.dart';
 import 'package:yine/screens/login.dart';
 import 'package:yine/screens/main_nav.dart';

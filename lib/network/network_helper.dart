@@ -11,3 +11,5 @@ class StatusCode {
   static const int InternalServerError = 500;
 
 }
+
+String baseURL = "http://10.0.2.2:9010";

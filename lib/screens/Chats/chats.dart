@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:yine/main.dart';
+import 'package:yine/models/conversation.dart';
+import 'package:yine/network/conversation.dart';
+import 'package:yine/screens/Chats/Components/conversations.dart';
 import 'package:yine/themes/styles.dart';
 
 class Chats extends StatefulWidget {
@@ -8,18 +12,22 @@ class Chats extends StatefulWidget {
 }
 
 class _Chats extends State<Chats> {
-
   dynamic conversations;
-
 
   @override
   void initState() {
-
+    getDataFromInternet();
     super.initState();
   }
 
-  void getConversationsDataFromDatabase() async {
-
+  void getDataFromInternet() async {
+    var cids = await fetchConversations(account);
+    conversations = <Conversation>[];
+    for (String cid in cids) {
+      var t = await fetchBasicInfoConversation(account, cid);
+      conversations.add(t);
+    }
+    setState(() {});
   }
 
   @override
@@ -34,8 +42,19 @@ class _Chats extends State<Chats> {
           ),
         ),
         actions: <Widget>[
-          IconButton(onPressed: (){}, icon: ImageIcon(AssetImage("images/chat.png"), color: LightTheme.stertiaryColor, size: 22,)),
-          IconButton(onPressed: (){}, icon: Icon(Icons.more_vert, color: LightTheme.stertiaryColor,)),
+          IconButton(
+              onPressed: () {},
+              icon: ImageIcon(
+                const AssetImage("images/chat.png"),
+                color: LightTheme.stertiaryColor,
+                size: 22,
+              )),
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.more_vert,
+                color: LightTheme.stertiaryColor,
+              )),
         ],
       ),
       body: SafeArea(
@@ -58,20 +77,10 @@ class _Chats extends State<Chats> {
                   ),
                 ),
               ),
-              Container(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage("images/user.png"),
-                      ),
-                      
-                    ],
-                  )
-                ),
-              ),
+              Expanded(
+                  child: conversations == null
+                      ? const CircularProgressIndicator()
+                      : ConversationList(convs: conversations)),
             ],
           ),
         ),
